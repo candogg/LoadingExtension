@@ -110,6 +110,9 @@ namespace LoadingExtension.Extensions
                 c.Controls.Remove(contentPanel);
 
                 contentPanel.Dispose();
+
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
             }
             catch
             { }
