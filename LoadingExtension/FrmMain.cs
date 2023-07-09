@@ -17,6 +17,7 @@ namespace LoadingExtension
         private CancellationTokenSource cancellationTokenSource;
         private Task heavyTask;
         private bool canClose;
+        private bool closeRequired;
 
         public FrmMain()
         {
@@ -25,6 +26,7 @@ namespace LoadingExtension
             cancellationTokenSource = new CancellationTokenSource();
 
             canClose = true;
+            closeRequired = false;
         }
 
         private void BtnHeavyLoad_Click(object sender, EventArgs e)
@@ -99,6 +101,8 @@ namespace LoadingExtension
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
+            closeRequired = true;
+
             e.Cancel = !canClose;
 
             if (!canClose)
@@ -115,7 +119,7 @@ namespace LoadingExtension
             {
                 canClose = true;
 
-                this.InvokeAsUIThread(() => { Close(); });
+                this.InvokeAsUIThread(() => { if (!closeRequired) return; Close(); });
             });
         }
     }
